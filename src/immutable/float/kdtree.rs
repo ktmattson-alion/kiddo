@@ -532,24 +532,12 @@ where
         stem_index: usize,
         right_capacity: usize,
     ) -> usize {
-        let mut pivot = (chunk_length + shifted) >> 1;
-        if stem_index == 1 {
-            // If at the top level, check if there's been a shift
-            pivot = if chunk_length & 1 == 1 {
-                #[cfg(feature = "tracing")]
-                event!(Level::DEBUG, "calc_pivot: unusual route");
-                (pivot + 1).next_power_of_two()
-            } else {
-                //event!(Level::TRACE, "cp C");
-                pivot.next_power_of_two()
-            };
-        } else if chunk_length & 0x01 == 1 && shifted == 0 {
-            //#[cfg(feature = "tracing")]
-            //event!(Level::TRACE, "cp D");
-            pivot = (pivot + 1).next_power_of_two()
+        let mut pivot = chunk_length + shifted;
+        pivot = if pivot & 1 == 1 {
+            (pivot >> 1 + 1).next_power_of_two()
         } else {
-            pivot = pivot.next_power_of_two();
-        }
+            (pivot >> 1).next_power_of_two()
+        };
         pivot -= shifted;
         pivot = pivot.max(chunk_length.saturating_sub(right_capacity));
         //#[cfg(feature = "tracing")]
