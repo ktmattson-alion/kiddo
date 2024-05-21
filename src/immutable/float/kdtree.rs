@@ -534,7 +534,7 @@ where
     ) -> usize {
         let mut pivot = chunk_length + shifted;
         pivot = if pivot & 1 == 1 {
-            (pivot >> 1 + 1).next_power_of_two()
+            ((pivot >> 1) + 1).next_power_of_two()
         } else {
             (pivot >> 1).next_power_of_two()
         };
