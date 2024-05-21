@@ -538,7 +538,9 @@ where
         } else {
             (pivot >> 1).next_power_of_two()
         };
-        pivot -= shifted;
+        if let Some(p) = pivot.checked_sub(shifted) {
+                pivot = p;
+            }
         pivot = pivot.max(chunk_length.saturating_sub(right_capacity));
         //#[cfg(feature = "tracing")]
         //event!(Level::TRACE, pivot, "pivot");
